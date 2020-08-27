@@ -3,6 +3,7 @@ package com.flore.room_kotlin_tutorial
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -11,6 +12,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             application,
     AppDatabase::class.java, "database-name"
     ).build()
+
+    var todos: LiveData<List<Todo>>
+
+    init {
+        todos = getAll()
+    }
 
     // LiveData 적용
     fun getAll(): LiveData<List<Todo>> {
