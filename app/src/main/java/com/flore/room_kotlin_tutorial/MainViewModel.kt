@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Room DB 생성
@@ -14,6 +16,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     ).build()
 
     var todos: LiveData<List<Todo>>
+
+    var newTodo : String? = null
 
     init {
         todos = getAll()
@@ -25,7 +29,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     // Coroutine 적용
-    suspend fun insert(todo : Todo){
-        db.todoDao().insert(todo)
+    fun insert(todo : String){
+        viewModelScope.launch(Dispatchers.IO){
+            db.todoDao().insert(Todo(todo))
+        }
     }
 }
